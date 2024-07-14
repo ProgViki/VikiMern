@@ -1,9 +1,10 @@
 import express from 'express';
-import connectToDatabase from "./config/db";
-import { APP_ORIGIN } from './constants/env';
+import { connectToDatabase } from "./config/db";
+import { APP_ORIGIN, NODE_ENV, PORT } from './constants/env';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import errorHandler from "./middleware/errorHandler";
+import authRoutes from './routes/auth.route';
 
 
 
@@ -21,15 +22,21 @@ app.use(
 app.use(cookieParser())
 
 
-app.get('/', (req, res) => {
-   throw new Error('This is error');
-   return res.status(200).json({ 
+app.get('/', (req, res, next) => {
+    try{
+   throw new Error('This is a test error');
+   return res.status(200).json({
     status: 'healthy'
  });
+    }catch (error){
+        next(error);
+    }
 })
 
+app.use("/auth", authRoutes);
 app.use(errorHandler);
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(4004, async() => {
+    console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment.`);
+    await connectToDatabase();
 })
