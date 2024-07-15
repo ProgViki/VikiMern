@@ -11,7 +11,7 @@ const defaults: CookieOptions ={
     secure
 }
 
-const getAccessTokenCookieOptions = (): CookieOptions => ({
+const getAccessTokenCookieOptions = (): CookieOptions => ({ 
     ...defaults, 
     // maxAge, 
     path: "/",
